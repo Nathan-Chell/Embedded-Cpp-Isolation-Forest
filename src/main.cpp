@@ -140,7 +140,7 @@ int main(int argc, const char *argv[])
     const char *ARG_DUMP = "dump";
     const size_t NUM_TRAINING_SAMPLES = 100;
     const size_t NUM_TEST_SAMPLES = 10;
-    const uint32_t NUM_TREES_IN_FOREST = 10;
+    const uint32_t NUM_TREES_IN_FOREST = 100;
     const uint32_t SUBSAMPLING_SIZE = 10;
 
     std::ofstream outStream;

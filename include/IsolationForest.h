@@ -36,7 +36,7 @@ namespace IsolationForest
     class Feature
     {
     public:
-        Feature(const std::string &name, uint32_t value)
+        Feature(const std::string &name, unsigned short value)
         {
             m_name = name;
             m_value = value;
@@ -45,13 +45,12 @@ namespace IsolationForest
 
         virtual void Name(std::string &name) { m_name = name; };
         virtual std::string Name() const { return m_name; };
-
-        virtual void Value(uint32_t value) { m_value = value; };
-        virtual uint32_t Value() const { return m_value; };
+        virtual void Value(unsigned short value) { m_value = value; };
+        virtual unsigned short Value() const { return m_value; };
 
     protected:
         std::string m_name;
-        uint32_t m_value;
+        unsigned short m_value;
 
     private:
         Feature(){};
@@ -86,11 +85,11 @@ namespace IsolationForest
     {
     public:
         Node();
-        Node(const std::string &featureName, uint32_t splitValue);
+        Node(const std::string &featureName, unsigned short splitValue);
         virtual ~Node();
 
         virtual std::string FeatureName() const { return m_featureName; };
-        virtual uint32_t SplitValue() const { return m_splitValue; };
+        virtual unsigned short SplitValue() const { return m_splitValue; };
 
         Node *Left() const { return m_left; };
         Node *Right() const { return m_right; };
@@ -102,7 +101,7 @@ namespace IsolationForest
 
     private:
         std::string m_featureName;
-        uint32_t m_splitValue;
+        unsigned short m_splitValue;
 
         Node *m_left;
         Node *m_right;
@@ -123,24 +122,24 @@ namespace IsolationForest
         Randomizer() : m_gen(m_rand()){};
         virtual ~Randomizer(){};
 
-        virtual uint32_t Rand() { return m_dist(m_gen); };
-        virtual uint32_t RandUInt32(uint32_t min, uint32_t max) { return min + (Rand() % (max - min + 1)); }
+        virtual unsigned short Rand() { return m_dist(m_gen); };
+        virtual unsigned short RandUShort(unsigned short min, unsigned short max) { return min + (Rand() % (max - min + 1)); }
 
     private:
         std::random_device m_rand;
         std::mt19937_64 m_gen;
-        std::uniform_int_distribution<uint32_t> m_dist;
+        std::uniform_int_distribution<unsigned short> m_dist;
     };
 
-    typedef std::set<uint32_t> Uint32Set;
-    typedef std::map<std::string, Uint32Set> FeatureNameToValuesMap;
+    typedef std::set<unsigned short> UShortSet;
+    typedef std::map<std::string, UShortSet> FeatureNameToValuesMap;
 
     /// Isolation Forest implementation.
     class Forest
     {
     public:
         Forest();
-        Forest(uint32_t numTrees, uint32_t subSamplingSize);
+        Forest(unsigned short numTrees, unsigned short subSamplingSize);
         virtual ~Forest();
 
         void SetRandomizer(Randomizer *newRandomizer);
@@ -156,8 +155,8 @@ namespace IsolationForest
         Randomizer *m_randomizer;               // Performs random number generation
         FeatureNameToValuesMap m_featureValues; // Lists each feature and maps it to all unique values in the training set
         NodePtrList m_trees;                    // The decision trees that comprise the forest
-        uint32_t m_numTreesToCreate;            // The maximum number of trees to create
-        uint32_t m_subSamplingSize;             // The maximum depth of a tree
+        unsigned short m_numTreesToCreate;            // The maximum number of trees to create
+        unsigned short m_subSamplingSize;             // The maximum depth of a tree
 
         NodePtr CreateTree(const FeatureNameToValuesMap &featureValues, size_t depth);
         float Score(const Sample &sample, const NodePtr tree);

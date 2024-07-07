@@ -33,7 +33,7 @@ namespace IsolationForest
     }
 
     /// Constructor.
-    Node::Node(const std::string &featureName, uint32_t splitValue) : m_featureName(featureName),
+    Node::Node(const std::string &featureName, unsigned short splitValue) : m_featureName(featureName),
                                                                       m_splitValue(splitValue),
                                                                       m_left(NULL),
                                                                       m_right(NULL)
@@ -108,7 +108,7 @@ namespace IsolationForest
     }
 
     /// Constructor.
-    Forest::Forest(uint32_t numTrees, uint32_t subSamplingSize) : m_randomizer(new Randomizer()),
+    Forest::Forest(unsigned short numTrees, unsigned short subSamplingSize) : m_randomizer(new Randomizer()),
                                                                   m_numTreesToCreate(numTrees),
                                                                   m_subSamplingSize(subSamplingSize)
     {
@@ -138,18 +138,18 @@ namespace IsolationForest
         {
             const FeaturePtr feature = (*featureIter);
             const std::string &featureName = feature->Name();
-            uint32_t featureValue = feature->Value();
+            unsigned short featureValue = feature->Value();
 
             // Either create or update the feature values count.
             if (m_featureValues.count(featureName) == 0)
             {
-                Uint32Set featureValueSet;
+                UShortSet featureValueSet;
                 featureValueSet.insert(featureValue);
                 m_featureValues.insert(std::make_pair(featureName, featureValueSet));
             }
             else
             {
-                Uint32Set &featureValueSet = m_featureValues.at(featureName);
+                UShortSet &featureValueSet = m_featureValues.at(featureName);
                 featureValueSet.insert(featureValue);
             }
 
@@ -175,13 +175,13 @@ namespace IsolationForest
         }
 
         // Randomly select a feature.
-        size_t selectedFeatureIndex = (size_t)m_randomizer->RandUInt32(0, featureValuesLen - 1);
+        size_t selectedFeatureIndex = (size_t)m_randomizer->RandUShort(0, featureValuesLen - 1);
         FeatureNameToValuesMap::const_iterator featureIter = featureValues.begin();
         std::advance(featureIter, selectedFeatureIndex);
         const std::string &selectedFeatureName = (*featureIter).first;
 
         // Get the value list to split on.
-        const Uint32Set &featureValueSet = (*featureIter).second;
+        const UShortSet &featureValueSet = (*featureIter).second;
         if (featureValueSet.size() == 0)
         {
             return NULL;
@@ -191,11 +191,11 @@ namespace IsolationForest
         size_t splitValueIndex = 0;
         if (featureValueSet.size() > 1)
         {
-            splitValueIndex = (size_t)m_randomizer->RandUInt32(0, featureValueSet.size() - 1);
+            splitValueIndex = (size_t)m_randomizer->RandUShort(0, featureValueSet.size() - 1);
         }
-        Uint32Set::const_iterator splitValueIter = featureValueSet.begin();
+        UShortSet::const_iterator splitValueIter = featureValueSet.begin();
         std::advance(splitValueIter, splitValueIndex);
-        uint32_t splitValue = (*splitValueIter);
+        unsigned short splitValue = (*splitValueIter);
 
         // Create a tree node to hold the split value.
         NodePtr tree = new Node(selectedFeatureName, splitValue);
@@ -206,7 +206,7 @@ namespace IsolationForest
             FeatureNameToValuesMap tempFeatureValues = featureValues;
 
             // Create the left subtree.
-            Uint32Set leftFeatureValueSet = featureValueSet;
+            UShortSet leftFeatureValueSet = featureValueSet;
             splitValueIter = leftFeatureValueSet.begin();
             std::advance(splitValueIter, splitValueIndex);
             leftFeatureValueSet.erase(splitValueIter, leftFeatureValueSet.end());
@@ -216,7 +216,7 @@ namespace IsolationForest
             // Create the right subtree.
             if (splitValueIndex < featureValueSet.size() - 1)
             {
-                Uint32Set rightFeatureValueSet = featureValueSet;
+                UShortSet rightFeatureValueSet = featureValueSet;
                 splitValueIter = rightFeatureValueSet.begin();
                 std::advance(splitValueIter, splitValueIndex + 1);
                 rightFeatureValueSet.erase(rightFeatureValueSet.begin(), splitValueIter);
