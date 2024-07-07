@@ -1,6 +1,6 @@
 //	MIT License
 //
-//  Copyright © 2017 Michael J Simms. All rights reserved.
+//  Copyright © 2024 Nathan P Chell. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
